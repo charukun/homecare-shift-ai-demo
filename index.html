@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CareShift AI Demo</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--ink:#142033;--muted:#6c788b;--line:#e4e9f1;--navy:#153a66;--blue:#2d6cdf;--green:#1b8c63;--amber:#c88117;--red:#c33d4b;--softblue:#edf4ff;--softgreen:#eaf8f2;--softamber:#fff5e5;--softred:#fff0f2}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans JP",sans-serif;background:var(--bg);color:var(--ink)}
+button,input,select{font:inherit}.app{min-height:100vh}.topbar{background:#0e2949;color:#fff;padding:14px 18px;position:sticky;top:0;z-index:20;box-shadow:0 2px 12px #0d254922}
+.toprow{max-width:1440px;margin:auto;display:flex;align-items:center;gap:14px}.brand{font-weight:800;font-size:18px;letter-spacing:.2px}.pill{font-size:11px;background:#ffffff18;border:1px solid #ffffff2e;padding:4px 8px;border-radius:999px}.spacer{flex:1}.ghost{background:transparent;color:#fff;border:1px solid #ffffff3b;border-radius:9px;padding:8px 11px}
+main{max-width:1440px;margin:0 auto;padding:18px}.hero{display:flex;gap:14px;align-items:stretch;flex-wrap:wrap}.heroCard{background:linear-gradient(135deg,#153a66,#235889);color:#fff;border-radius:16px;padding:20px;flex:2;min-width:300px;box-shadow:0 8px 30px #153a6620}.heroCard h1{margin:0 0 7px;font-size:24px}.heroCard p{margin:0;color:#dce9f8;line-height:1.6}.aiBtn{margin-top:16px;background:#fff;color:#153a66;border:0;border-radius:11px;font-weight:800;padding:12px 17px;cursor:pointer}
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(110px,1fr));gap:10px;flex:1;min-width:300px}.kpi{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}.kpi b{display:block;font-size:27px;margin-top:5px}.kpi small{color:var(--muted)}.ok{color:var(--green)}.warn{color:var(--amber)}.bad{color:var(--red)}
+.toolbar{margin-top:16px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}.control{border:1px solid var(--line);background:#fff;border-radius:9px;padding:9px 10px}.primary{background:var(--blue);color:#fff;border:0;border-radius:9px;padding:10px 13px;font-weight:700;cursor:pointer}.secondary{background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:9px 12px;cursor:pointer}.status{margin-left:auto;font-size:12px;color:var(--muted)}
+.grid{margin-top:16px;display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:16px}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}.cardHead{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}.cardHead h2{font-size:15px;margin:0}.sub{font-size:12px;color:var(--muted)}
+.scheduleWrap{overflow:auto;max-height:630px}.schedule{width:100%;border-collapse:separate;border-spacing:0;min-width:920px}.schedule th,.schedule td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:7px;vertical-align:top}.schedule th{position:sticky;top:0;background:#f8fafc;z-index:4;font-size:12px}.schedule th:first-child,.schedule td:first-child{position:sticky;left:0;z-index:3;background:#fff;min-width:96px}.schedule th:first-child{z-index:5;background:#f8fafc}.day{font-weight:800;font-size:12px}.weekday{display:block;color:var(--muted);font-weight:500}.slot{border-radius:8px;padding:6px 7px;margin:3px 0;font-size:11px;line-height:1.35;border-left:3px solid}.slot .time{font-weight:800}.slot small{display:block;color:#5f6a7b}.s1{background:var(--softblue);border-color:#4d7fe8}.s2{background:var(--softgreen);border-color:#35a77d}.s3{background:var(--softamber);border-color:#e2a33f}.slot.problem{box-shadow:inset 0 0 0 1px #dc6070;background:var(--softred);border-color:var(--red)}
+.side{display:flex;flex-direction:column;gap:16px}.issueList{padding:8px 14px 14px}.issue{padding:11px;border:1px solid var(--line);border-radius:10px;margin-top:9px}.issue b{font-size:12px}.issue p{margin:4px 0 0;font-size:12px;color:var(--muted);line-height:1.5}.tag{display:inline-block;font-size:10px;font-weight:800;border-radius:999px;padding:3px 7px;margin-right:5px}.tag.red{color:var(--red);background:var(--softred)}.tag.amber{color:#9a5d00;background:var(--softamber)}.tag.blue{color:var(--blue);background:var(--softblue)}
+.flow{padding:14px}.step{display:flex;gap:10px;margin-bottom:13px}.dot{width:24px;height:24px;border-radius:50%;background:#eaf0f7;display:grid;place-items:center;font-size:11px;font-weight:800;flex:none}.step.done .dot{background:#dff4ea;color:var(--green)}.step b{font-size:12px}.step p{font-size:11px;color:var(--muted);margin:3px 0 0}.litBtn{width:100%;background:#173d68;color:#fff;border:0;border-radius:10px;padding:11px;font-weight:800;cursor:pointer}
+.toast{position:fixed;right:18px;bottom:18px;background:#102b4b;color:#fff;padding:12px 15px;border-radius:10px;box-shadow:0 10px 30px #0003;opacity:0;transform:translateY(10px);pointer-events:none;transition:.25s;z-index:50}.toast.show{opacity:1;transform:none}
+.modal{position:fixed;inset:0;background:#0b1f3880;display:none;align-items:center;justify-content:center;padding:18px;z-index:60}.modal.show{display:flex}.modalBox{background:#fff;border-radius:16px;max-width:780px;width:100%;max-height:86vh;overflow:auto}.modalHead{padding:15px 17px;border-bottom:1px solid var(--line);display:flex;align-items:center}.modalHead h3{margin:0;font-size:16px}.close{margin-left:auto;border:0;background:#eef2f7;border-radius:8px;padding:6px 9px}.preview{padding:16px}.preview table{width:100%;border-collapse:collapse;font-size:12px}.preview th,.preview td{text-align:left;border-bottom:1px solid var(--line);padding:9px}.footnote{font-size:11px;color:var(--muted);line-height:1.6;margin-top:12px}
+@media(max-width:980px){.grid{grid-template-columns:1fr}.side{display:grid;grid-template-columns:1fr 1fr}.scheduleWrap{max-height:520px}}@media(max-width:650px){main{padding:12px}.topbar{padding:12px}.brand{font-size:15px}.heroCard h1{font-size:20px}.kpis{grid-template-columns:repeat(3,1fr);min-width:0;width:100%}.kpi{padding:12px}.kpi b{font-size:22px}.side{grid-template-columns:1fr}.status{width:100%;margin-left:0}.ghost{display:none}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="topbar"><div class="toprow"><div class="brand">CareShift AI</div><span class="pill">訪問介護シフト デモ</span><div class="spacer"></div><button class="ghost" onclick="toast('デモでは架空データのみ使用しています')">データについて</button></div></header>
+<main>
+<section class="hero">
+<div class="heroCard"><h1>事業者ごとの予定を、ひとつのシフトへ。</h1><p>訪問予定・勤務可能時間・担当条件をまとめてチェックし、ヘルパー配置案とLITALICO登録用データを一気に作るデモです。</p><button class="aiBtn" id="aiBtn">✨ AIでシフトを再作成</button></div>
+<div class="kpis"><div class="kpi"><small>訪問予定</small><b>128</b><span class="sub">10月分</span></div><div class="kpi"><small>未配置</small><b class="warn" id="unassigned">3</b><span class="sub">要確認</span></div><div class="kpi"><small>重大エラー</small><b class="bad" id="errors">2</b><span class="sub">重複・移動</span></div></div>
+</section>
+
+<section class="toolbar">
+<select class="control" id="provider"><option>全事業者</option><option>ひかりケア</option><option>つばさ訪問介護</option><option>あおぞら支援</option></select>
+<select class="control"><option>2026年10月</option></select>
+<button class="secondary" onclick="simulateImport()">予定表を取り込む</button>
+<button class="secondary" onclick="toast('未配置・重複・移動時間をチェックしました')">AIチェック</button>
+<button class="primary" onclick="openLit()">LITALICO連携プレビュー</button>
+<div class="status" id="status">最終更新: 09:42　架空データ</div>
+</section>
+
+<div class="grid">
+<section class="card">
+<div class="cardHead"><div><h2>月間シフト</h2><div class="sub">横：ヘルパー　縦：日付　色：事業者</div></div></div>
+<div class="scheduleWrap"><table class="schedule" id="schedule"></table></div>
+</section>
+
+<aside class="side">
+<section class="card"><div class="cardHead"><div><h2>AIチェック</h2><div class="sub">優先度が高い順</div></div></div><div class="issueList" id="issues">
+<div class="issue"><span class="tag red">移動困難</span><b>10/6 10:00 → 10:10</b><p>前訪問終了から次訪問まで10分。推定移動18分のため再配置を推奨。</p></div>
+<div class="issue"><span class="tag red">重複</span><b>10/14 14:00</b><p>同一ヘルパーに2件の訪問が割り当てられています。</p></div>
+<div class="issue"><span class="tag amber">未配置</span><b>3件</b><p>勤務条件に合う候補をAIが3名ずつ提示できます。</p></div>
+<div class="issue"><span class="tag blue">2人対応</span><b>10/22 16:30</b><p>2名配置済み。資格条件も満たしています。</p></div>
+</div></section>
+<section class="card"><div class="cardHead"><div><h2>請求システム連携</h2><div class="sub">デモフロー</div></div></div><div class="flow">
+<div class="step done"><div class="dot">✓</div><div><b>事業者別予定を統合</b><p>Excel・CSVを共通形式へ変換</p></div></div>
+<div class="step done"><div class="dot">✓</div><div><b>ヘルパーを割り当て</b><p>勤務・移動・資格条件を確認</p></div></div>
+<div class="step"><div class="dot">3</div><div><b>担当者が最終確認</b><p>警告だけ人が判断</p></div></div>
+<div class="step"><div class="dot">4</div><div><b>LITALICO登録データ</b><p>利用者・日時・担当者を整形</p></div></div>
+<button class="litBtn" onclick="openLit()">登録予定128件を確認</button>
+</div></section>
+</aside>
+</div>
+</main>
+</div>
+
+<div class="toast" id="toast"></div>
+<div class="modal" id="modal"><div class="modalBox"><div class="modalHead"><h3>LITALICO連携プレビュー</h3><button class="close" onclick="closeLit()">閉じる</button></div><div class="preview">
+<table><thead><tr><th>日付</th><th>時間</th><th>利用者</th><th>担当ヘルパー</th><th>サービス</th><th>状態</th></tr></thead><tbody>
+<tr><td>10/06</td><td>09:00-09:45</td><td>利用者A</td><td>高橋</td><td>身体介護</td><td><span class="tag blue">準備済</span></td></tr>
+<tr><td>10/06</td><td>10:20-11:00</td><td>利用者B</td><td>佐藤</td><td>生活援助</td><td><span class="tag blue">準備済</span></td></tr>
+<tr><td>10/06</td><td>13:00-14:00</td><td>利用者C</td><td>田中</td><td>身体介護</td><td><span class="tag amber">要確認</span></td></tr>
+<tr><td>10/06</td><td>16:30-17:15</td><td>利用者D</td><td>山本 / 伊藤</td><td>2人対応</td><td><span class="tag blue">準備済</span></td></tr>
+</tbody></table>
+<p class="footnote">この画面はデモです。実運用では、LITALICO側が提供する正式な取込方式・連携仕様を確認したうえでCSV出力または公式連携方式に合わせます。実在する利用者・職員情報はこの公開デモには含めません。</p>
+<button class="primary" onclick="toast('デモ: CSV出力を実行しました');closeLit()">CSVを書き出す（デモ）</button>
+</div></div></div>
+
+<script>
+const helpers=["高橋","佐藤","田中","山本","伊藤","小林"];
+const providers=["s1","s2","s3"];
+const clients=["利用者A","利用者B","利用者C","利用者D","利用者E","利用者F","利用者G","利用者H"];
+function seeded(n){const x=Math.sin(n*999)*10000;return x-Math.floor(x)}
+function buildSchedule(){
+ const table=document.getElementById("schedule");
+ let h="<thead><tr><th>日付</th>"+helpers.map(x=>"<th>"+x+"</th>").join("")+"</tr></thead><tbody>";
+ for(let d=1;d<=31;d++){
+  const wd=["木","金","土","日","月","火","水"][(d-1)%7];
+  h+="<tr><td><span class='day'>10/"+String(d).padStart(2,"0")+"</span><span class='weekday'>"+wd+"</span></td>";
+  helpers.forEach((name,i)=>{
+    const r=seeded(d*17+i*31);
+    if(r<.26){h+="<td></td>";return}
+    const count=r>.80?2:1;let cells="";
+    for(let k=0;k<count;k++){
+      const st=8+Math.floor(seeded(d*47+i*9+k*3)*9);
+      const min=seeded(d+i+k)>.5?"30":"00";
+      const dur=seeded(d*2+i+k)>.55?60:45;
+      const endM=(st*60+(min==="30"?30:0)+dur);const et=Math.floor(endM/60)+":"+String(endM%60).padStart(2,"0");
+      const cl=providers[(d+i+k)%3];const problem=(d===6&&i===1&&k===1)||(d===14&&i===3);
+      cells+="<div class='slot "+cl+(problem?" problem":"")+"'><span class='time'>"+st+":"+min+"-"+et+"</span><small>"+clients[(d+i+k)%clients.length]+"</small></div>";
+    }
+    h+="<td>"+cells+"</td>";
+  });
+  h+="</tr>";
+ }
+ table.innerHTML=h+"</tbody>";
+}
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),2200)}
+function simulateImport(){document.getElementById("status").textContent="予定表を読み込みました（デモ）";toast("3事業者・128件の予定を取り込みました")}
+function openLit(){document.getElementById("modal").classList.add("show")}
+function closeLit(){document.getElementById("modal").classList.remove("show")}
+document.getElementById("aiBtn").addEventListener("click",()=>{
+ const b=document.getElementById("aiBtn");b.disabled=true;b.textContent="AIが制約を確認中…";
+ setTimeout(()=>{document.getElementById("unassigned").textContent="1";document.getElementById("errors").textContent="0";b.textContent="✓ シフト案を更新しました";document.getElementById("status").textContent="AI再配置: 完了　架空データ";document.querySelectorAll(".slot.problem").forEach(x=>x.classList.remove("problem"));toast("2件を再配置し、重大エラーを解消しました");setTimeout(()=>{b.disabled=false;b.textContent="✨ AIでシフトを再作成"},1800)},1100)
+});
+document.getElementById("provider").addEventListener("change",e=>toast(e.target.value+"で絞り込みました（デモ）"));
+document.getElementById("modal").addEventListener("click",e=>{if(e.target.id==="modal")closeLit()});
+buildSchedule();
+</script>
+</body></html>
