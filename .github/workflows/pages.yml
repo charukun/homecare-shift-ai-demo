@@ -1,6 +1,7 @@
 name: Deploy GitHub Pages
-# Cloudflare Workers Builds is the new push CI/deploy path. GitHub Pages remains manual fallback.
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
 permissions:
   contents: read
