@@ -13,7 +13,7 @@ Workers & Pages で Worker **`careshift-ai-demo-ci`** を作成し、Settings �
 | Build command | `node scripts/build-static.mjs` |
 | Deploy command | `npx --yes wrangler@4.92.0 deploy --config wrangler.jsonc` |
 | Preview command | `npx --yes wrangler@4.92.0 preview --config wrangler.jsonc` |
-| Build variables | `NODE_VERSION=22.13.0`, `SKIP_DEPENDENCY_INSTALL=1`（npmの依存なし） |
+| Build variables | `NODE_VERSION=22`, `SKIP_DEPENDENCY_INSTALL=1`（npmの依存なし） |
 | Build watch paths (include) | `index.html`, `scripts/*`, `wrangler.jsonc` |
 
 ビルドはNodeでHTMLの構造を確認し、`site/index.html` と `site/release.json` を生成するだけ。DB、個人情報、GPU・ブラウザの描画テストは扱わない。Workerの配信対象は `site/` のみ。
