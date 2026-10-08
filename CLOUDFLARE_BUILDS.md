@@ -1,6 +1,6 @@
 # 訪問介護シフトAIデモ / Cloudflare Workers Builds
 
-現在の GitHub Pages の代わりに、Cloudflare Workers Builds が push を受けて静的サイトを組み立て、公開するための構成。既存の GitHub Pages の URL は GitHub 所有のため、Cloudflare Worker と同じ URL にはできない。**切替前に新しい公開先への案内が必要**。本PRは移行準備であり、マージ前に Cloudflare の公開と導線を確認する。
+現在の GitHub Pages の代わりに、Cloudflare Workers Builds が push を受けて静的サイトを組み立て、公開するための構成。既存の GitHub Pages の URL は GitHub 所有のため、Cloudflare Worker と同じ URL にはできない。**切替前に新しい公開先への案内が必要**。GitHub側の移行設定は先にmainへ統合するが、Cloudflareの公開とURLの導線が確認できるまではGitHub Pagesによる自動公開を維持する。
 
 ## Cloudflare 側で接続
 
@@ -18,4 +18,4 @@ Workers & Pages で Worker **`careshift-ai-demo-ci`** を作成し、Settings �
 
 ビルドはNodeでHTMLの構造を確認し、`site/index.html` と `site/release.json` を生成するだけ。DB、個人情報、GPU・ブラウザの描画テストは扱わない。Workerの配信対象は `site/` のみ。
 
-CloudflareのPreviewにてHTMLが実際に配信され、`release.json` に対応コミットが入っていることを確認する。新しい公開先への導線ができてから本PRをマージし、`.github/workflows/pages.yml` を手動フォールバックにする。現行GitHub PagesのURLは引き続き古い版を表示するため、周知・リダイレクトなしで公開URLの置換が済んだとは扱わない。
+CloudflareのPreviewにてHTMLが実際に配信され、`release.json` に対応コミットが入っていることを確認する。この準備PRをマージしても `.github/workflows/pages.yml` の自動公開は止めない。Cloudflareでの実ビルドと配信を確認し、新しい公開先への導線ができてから **別PRで** Pages自動公開を停止する。現行GitHub PagesのURLは引き続き古い版を表示するため、周知・リダイレクトなしで公開URLの置換が済んだとは扱わない。
