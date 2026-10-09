@@ -33,7 +33,10 @@ if(mode==='stamp'){
  if(base.protocol!=='https:'||base.username||base.password||base.pathname!=='/'||base.search||base.hash) throw Error('Expected HTTPS origin');
  const local=readFileSync(receiptFile),receipt=JSON.parse(local);
  if(receipt.commit!==revision) throw Error('Receipt is from another revision');
- async function verify(file){let last;for(let attempt=0;attempt<3;attempt++){
+ async function verify(file){
+  // Wait for the new manifest to propagate before verifying every published byte.
+  const manifest=file.path===receiptName,attempts=manifest?24:3;
+  let last;for(let attempt=0;attempt<attempts;attempt++){
   try{
    let url=new URL(file.path==='index.html'?'/':file.path.split('/').map(encodeURIComponent).join('/'),base);url.searchParams.set('ci_revision',revision);
    let r;for(let redirects=0;redirects<5;redirects++){
@@ -52,7 +55,10 @@ if(mode==='stamp'){
    if(/\.css$/.test(file.path)&&!type.includes('text/css')) throw Error('Incorrect CSS MIME');
    if(/\.wasm$/.test(file.path)&&!type.includes('application/wasm')) throw Error('Incorrect WASM MIME');
    return;
-  }catch(error){last=error;if(attempt<2) await delay(1000*(attempt+1));}
+  }catch(error){last=error;if(attempt<attempts-1){
+   if(manifest) console.log(`Waiting for published manifest (${attempt+1}/${attempts}): ${error.message}`);
+   await delay(manifest?5000:1000*(attempt+1));
+  }}
  }throw Error(`${file.path}: ${last.message}`);}
  await verify({path:receiptName,bytes:local.length,sha256:hash(local)});
  for(let i=0;i<receipt.files.length;i+=4) await Promise.all(receipt.files.slice(i,i+4).map(verify));
